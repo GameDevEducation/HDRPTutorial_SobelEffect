@@ -156,12 +156,15 @@ Shader "Hidden/Shader/Sobel"
         float offsetU = _Thickness / _ScreenSize.x;
         float offsetV = _Thickness / _ScreenSize.y;
 
+        // determine the uv coordinates
+        float2 uv = input.positionCS.xy* _ScreenSize.zw;
+
         // run the sobel sampling of the depth buffer
-        float sobelDepth = SobelSampleDepth(input.texcoord.xy, offsetU, offsetV);
+        float sobelDepth = SobelSampleDepth(uv, offsetU, offsetV);
         sobelDepth = pow(abs(saturate(sobelDepth)) * _DepthMultiplier, _DepthBias);
 
         // run the sobel sampling of the normals
-        float sobelNormal = SobelSampleNormal(input.texcoord.xy, offsetU, offsetV);
+        float sobelNormal = SobelSampleNormal(uv, offsetU, offsetV);
         sobelNormal = pow(abs(saturate(sobelNormal)) * _NormalMultiplier, _NormalBias);
 
         float outlineIntensity = saturate(max(sobelDepth, sobelNormal));
