@@ -161,16 +161,16 @@ Shader "Hidden/Shader/Sobel"
 
         // run the sobel sampling of the depth buffer
         float sobelDepth = SobelSampleDepth(uv, offsetU, offsetV);
-        sobelDepth = pow(abs(saturate(sobelDepth)) * _DepthMultiplier, _DepthBias);
+        sobelDepth = pow(abs(saturate(sobelDepth) * _DepthMultiplier), _DepthBias);
 
         // run the sobel sampling of the normals
         float sobelNormal = SobelSampleNormal(uv, offsetU, offsetV);
-        sobelNormal = pow(abs(saturate(sobelNormal)) * _NormalMultiplier, _NormalBias);
+        sobelNormal = pow(abs(saturate(sobelNormal) * _NormalMultiplier), _NormalBias);
 
         float outlineIntensity = saturate(max(sobelDepth, sobelNormal));
 
         // apply the sobel effect
-        float3 finalColor = lerp(sourceColor, _Colour, outlineIntensity * _Intensity);
+        float3 finalColor = lerp(sourceColor, (float3)_Colour, outlineIntensity * _Intensity);
 
         //return float4(sobelNormal, sobelNormal, sobelNormal, 1);
         //return float4(sobelDepth, sobelDepth, sobelDepth, 1);
